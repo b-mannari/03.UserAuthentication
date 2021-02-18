@@ -132,6 +132,36 @@ namespace NUnitUserAuthentication
             Assert.AreEqual(true, actulaResult);
         }
 
+        [Test]
+        public void ShouldReturnFailure_WhenValidUsernameAndInvalidPasswordIsPassed_Mock_Never()
+        {
+            //string expectedResult = "User added successfully.";
+            string username = "testuser2"; string password = "password";
+            UserModel model = new UserModel { Username = username, Password = password };
+
+            var mock = new Mock<IUserInterface>();
+            mock.Setup(p => p.AddUser(model)).Returns(Task.Run(() => { return true; }));
+            mock.Verify(p => p.AddUser(model), Times.Never());
+
+            bool actulaResult = mock.Object.AddUser(model).Result;
+            Assert.AreEqual(true, actulaResult);
+        }
+
+        [Test]
+        public void ShouldReturnSuccess_WhenValidUsernameAndValidPasswordIsPassed_Mock_Once()
+        {
+            //string expectedResult = "User added successfully.";
+            string username = "testuser"; string password = "Testuser1";
+            UserModel model = new UserModel { Username = username, Password = password };
+
+            var mock = new Mock<IUserInterface>(); 
+            mock.Setup(p => p.AddUser(model)).Returns(Task.Run(() => { return true; }));
+            bool actulaResult = mock.Object.AddUser(model).Result;
+            mock.Verify(p => p.AddUser(model), Times.Once());
+           
+            Assert.AreEqual(true, actulaResult);
+        }
+
         [OneTimeTearDown]
         public void TearDown()
         {

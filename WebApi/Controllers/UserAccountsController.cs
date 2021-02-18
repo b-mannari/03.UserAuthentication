@@ -66,9 +66,26 @@ namespace WebApi.Controllers
 
             List<UserModel> userList = JsonConvert.DeserializeObject<List<UserModel>>(strResponseContent);
             userList.Where(x => x.Username == Username).FirstOrDefault();
-            int cnt = userList.Where(x => x.Username == Username).Count();
+            //int cnt = userList.Where(x => x.Username == Username).Count();
+            //int cnt = userList.Count();
+            return userList.Count() > 0;
+            //return cnt > 0 ? true : false;
+        }
 
-            return cnt > 0;
+        [HttpGet("/api/users/UserPasswordExists")]
+        // GET: UserAccountsController/Details/5
+        public bool UserPasswordExists(string Username, string password)
+        {
+            string strResponseContent;
+            using (StreamReader reader = new StreamReader(FilePath))
+            {
+                strResponseContent = reader.ReadToEnd();
+            }
+
+            List<UserModel> userList = JsonConvert.DeserializeObject<List<UserModel>>(strResponseContent);
+            userList.Where(x => x.Username == Username && x.Password == password).FirstOrDefault();
+            //int cnt = userList.Count();
+            return userList.Count() > 0;
             //return cnt > 0 ? true : false;
         }
 

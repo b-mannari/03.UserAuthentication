@@ -80,6 +80,24 @@ namespace UserAuthenticationService
             }
             return UserCreated;
         }
+
+
+        public async Task<bool> Login(UserModel model)
+        {
+            bool userExists = false;
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = httpClient.GetAsync(baseApi + "UserPasswordExists?Username=" + model.Username + "?Password=" + model.Password).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        userExists = true;
+                    }
+                }
+            }
+            return userExists;
+        }
     }
 }
 

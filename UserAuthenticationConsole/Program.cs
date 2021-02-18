@@ -51,7 +51,7 @@ namespace UserAuthenticationConsole
                 case 2:
                     LoginUser loginUser = new LoginUser();
                     userAccount.Username = username; userAccount.Password = password;
-                    message = loginUser.Login(userAccount.Username, userAccount.Password, userAccount);
+                    message = loginUser.Login(userAccount.Username, userAccount.Password);
                     if (message.Contains("failure"))
                     { Console.ForegroundColor = ConsoleColor.Red; }
                     else

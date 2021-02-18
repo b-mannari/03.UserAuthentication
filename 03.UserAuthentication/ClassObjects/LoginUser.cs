@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Threading.Tasks;
+using UserAuthenticationService;
+using UserAuthenticationService.ClassObjects;
 
 namespace UserAuthentication.ClassObjects
 {
     public class LoginUser
     {
-        public string Login(string username, string password, UserAccount userAccount)
+        UserService userService = new UserService();
+        public string Login(string username, string password )
         {
             string message = "";
+            UserModel model = new UserModel { Username = username, Password = password };
             try
             {
-                if (userAccount.GetUserInfo.ContainsKey(username) && userAccount.GetUserInfo.ContainsValue(password))
+                if (isUserPasswordExists(model.Username, model.Password))
                 {
                     message = "Login Success";
                 }
@@ -23,6 +28,14 @@ namespace UserAuthentication.ClassObjects
                 Console.WriteLine("Exception: " + e.Message);
             }
             return message;
+        }
+
+        public bool isUserPasswordExists(string Username, string Password)
+        {
+            bool isUserPresent = false;
+            UserModel model = new UserModel { Username = Username, Password = Password };
+            Task.Run(async () => { isUserPresent = await userService.Login(model); }).Wait();
+            return isUserPresent;
         }
 
         public string Login_old(string username, string password, UserAccount userAccount)
