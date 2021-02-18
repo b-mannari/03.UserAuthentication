@@ -1,6 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
+using System.Threading.Tasks;
 using UserAuthentication;
 using UserAuthentication.ClassObjects;
+using UserAuthenticationService;
+using UserAuthenticationService.ClassObjects;
 
 namespace NUnitUserAuthentication
 {
@@ -56,16 +60,16 @@ namespace NUnitUserAuthentication
             Assert.IsFalse(result);
         }
 
-        [Test]
-        public void ShouldReturnSuccess_WhenValidUsernameIsPassed()
-        {
-            string expectedResult = "User created Successfully";
-            string username = "badari"; string password = "Mannari1";
+        //[Test]
+        //public void ShouldReturnSuccess_WhenValidUsernameIsPassed()
+        //{
+        //    string expectedResult = "User created Successfully";
+        //    string username = "badari"; string password = "Mannari1";
 
-            string actulaResult = createUser.AddNewUser(username, password, userAccount);
+        //    string actulaResult = createUser.AddNewUser(username, password);
 
-            Assert.AreEqual(expectedResult, actulaResult);
-        }
+        //    Assert.AreEqual(expectedResult, actulaResult);
+        //}
 
         [Test]
         public void ShouldReturnFailure_WhenValidUsernameAndInvalidPasswordIsPassed()
@@ -73,7 +77,7 @@ namespace NUnitUserAuthentication
             string expectedResult = "User created Successfully";
             string username = "testuser"; string password = "password";
 
-            string actulaResult = createUser.AddNewUser(username, password, userAccount);
+            string actulaResult = createUser.AddNewUser(username, password);
 
             Assert.AreNotEqual(expectedResult, actulaResult);
         }
@@ -84,7 +88,7 @@ namespace NUnitUserAuthentication
             string expectedResult = "User created Successfully";
             string username = "testuser1"; string password = "password";
 
-            string actulaResult = createUser.AddNewUser(username, password, userAccount);
+            string actulaResult = createUser.AddNewUser(username, password);
 
             Assert.AreNotEqual(expectedResult, actulaResult);
         }
@@ -95,9 +99,37 @@ namespace NUnitUserAuthentication
             string expectedResult = "Unable to create user";
             string username = "testuser2"; string password = "password";
 
-            string actulaResult = createUser.AddNewUser(username, password, userAccount);
+            string actulaResult = createUser.AddNewUser(username, password);
 
             Assert.AreEqual(expectedResult, actulaResult);
+        }
+
+        [Test]
+        public void ShouldReturnSuccess_WhenInValidUsernameIsPassed_Mock()
+        {
+            //string expectedResult = "Unable to create user";
+            string username = "testuser2"; string password = "password";
+            UserModel model = new UserModel { Username = username, Password = password };
+
+            var mock = new Mock<IUserInterface>();
+            mock.Setup(p => p.AddUser(model)).Returns(Task.Run(() => { return true; }));
+            bool actulaResult = mock.Object.AddUser(model).Result;
+
+            Assert.AreEqual(true, actulaResult);
+        }
+
+        [Test]
+        public void ShouldReturnFailure_WhenValidUsernameAndInvalidPasswordIsPassed_Mock()
+        {
+            //string expectedResult = "User added successfully.";
+            string username = "testuser2"; string password = "password";
+            UserModel model = new UserModel { Username = username, Password = password };
+
+            var mock = new Mock<IUserInterface>();
+            mock.Setup(p => p.AddUser(model)).Returns(Task.Run(() => { return true; }));
+            bool actulaResult = mock.Object.AddUser(model).Result;
+
+            Assert.AreEqual(true, actulaResult);
         }
 
         [OneTimeTearDown]

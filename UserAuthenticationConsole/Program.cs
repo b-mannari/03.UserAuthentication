@@ -1,6 +1,7 @@
 ﻿using System;
 using UserAuthentication;
 using UserAuthentication.ClassObjects;
+using UserAuthenticationService;
 
 namespace UserAuthenticationConsole
 {
@@ -40,7 +41,7 @@ namespace UserAuthenticationConsole
                 case 1:
                     CreateUser createUser = new CreateUser();
                     userAccount.Username = username; userAccount.Password = password;
-                    message = createUser.AddNewUser(userAccount.Username, userAccount.Password, userAccount);
+                    message = createUser.AddNewUser(userAccount.Username, userAccount.Password);
                     if (message.Contains("Unable"))
                     { Console.ForegroundColor = ConsoleColor.Red; }
                     else
